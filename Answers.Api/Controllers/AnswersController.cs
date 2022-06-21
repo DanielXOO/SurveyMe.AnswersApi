@@ -1,6 +1,5 @@
 using Answers.Api.Models.Request;
 using Answers.Api.Models.Request.Surveys;
-using Answers.Api.Models.Response.Errors;
 using Answers.Api.Models.Response.Pages;
 using Answers.Api.Models.Response.Results;
 using Answers.Models.Answers;
@@ -10,6 +9,7 @@ using IdentityServer4.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SurveyMe.Common.Exceptions;
+using SurveyMe.Error.Models.Response;
 
 namespace Answers.Api.Controllers;
 
