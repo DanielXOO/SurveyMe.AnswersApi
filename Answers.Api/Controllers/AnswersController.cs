@@ -59,6 +59,8 @@ public sealed class AnswersController : Controller
 
         var answer = _mapper.Map<SurveyAnswer>(surveyAnswerRequestModel);
 
+        answer.UserId = authorId;
+        
         var command = new AddAnswerCommand(answer);
         await _mediator.Send(command);
         

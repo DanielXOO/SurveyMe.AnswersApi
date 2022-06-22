@@ -4,7 +4,7 @@ using Answers.Models.Surveys;
 using AutoMapper;
 using SurveyMe.QueueModels;
 
-namespace Answers.Services.AutoMapper.Profiles;
+namespace Answers.Domain.Answers.AutoMapper.Profiles;
 
 public class QueueModelsProfile : Profile
 {

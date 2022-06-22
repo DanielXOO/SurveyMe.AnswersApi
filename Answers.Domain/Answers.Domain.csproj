@@ -7,10 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Answers" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Answers.Data.EFCore\Answers.Data.EFCore.csproj" />
       <ProjectReference Include="..\Answers.Models\Answers.Models.csproj" />
       <ProjectReference Include="..\Answers.Services\Answers.Services.csproj" />
@@ -23,6 +19,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="FluentValidation" Version="11.1.0" />
       <PackageReference Include="MediatR" Version="10.0.1" />
     </ItemGroup>
 
