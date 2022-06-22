@@ -4,10 +4,13 @@ using Answers.Api.Converters;
 using Answers.Api.Extensions;
 using Answers.Data;
 using Answers.Data.Abstracts;
+using Answers.Domain.Answers.AutoMapper.Profiles;
 using Answers.Domain.Answers.Commands;
+using Answers.Domain.Answers.Validators.Commands;
+using Answers.Domain.Validation;
 using Answers.Services;
 using Answers.Services.Abstracts;
-using Answers.Services.AutoMapper.Profiles;
+using FluentValidation;
 using IdentityServer4.AccessTokenValidation;
 using MassTransit;
 using MediatR;
@@ -44,6 +47,8 @@ builder.Services.AddAutoMapper(configuration =>
 });
 
 builder.Services.AddMediatR(typeof(AddAnswerCommand).Assembly);
+builder.Services.AddValidatorsFromAssembly(typeof(AddAnswerCommandValidator).Assembly);
+builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
 
 builder.Services.AddScoped<IAnswersUnitOfWork, AnswersUnitOfWork>();
 
