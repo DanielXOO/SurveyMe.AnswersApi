@@ -1,9 +1,9 @@
 ﻿using Answers.Api.Models.Request.Answers;
 using Answers.Api.Models.Request.Surveys;
 using Answers.Api.Models.Response.Results;
+using Answers.Domain.Answers.Models.Questions;
+using Answers.Domain.Answers.Models.Surveys;
 using Answers.Models.Answers;
-using Answers.Services.Models.Questions;
-using Answers.Services.Models.Surveys;
 using AutoMapper;
 
 namespace Answers.Api.MapperConfiguration.Profiles;

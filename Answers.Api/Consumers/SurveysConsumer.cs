@@ -1,11 +1,13 @@
+using Answers.Domain.Surveys.Commands;
 using Answers.Models.Surveys;
 using Answers.Services.Abstracts;
 using AutoMapper;
 using MassTransit;
-using SurveyMe.Common.Logging.Abstracts;
+using MediatR;
 using SurveyMe.QueueModels;
+using ILogger = SurveyMe.Common.Logging.Abstracts.ILogger;
 
-namespace Answers.Services.Consumers;
+namespace Answers.Api.Consumers;
 
 public sealed class SurveysConsumer : IConsumer<SurveyQueueModel>
 {
@@ -13,14 +15,14 @@ public sealed class SurveysConsumer : IConsumer<SurveyQueueModel>
 
     private readonly IMapper _mapper;
 
-    private readonly ISurveysService _surveysService;
+    private readonly IMediator _mediator;
 
     
-    public SurveysConsumer(ILogger logger, IMapper mapper, ISurveysService surveysService)
+    public SurveysConsumer(ILogger logger, IMapper mapper, IMediator mediator)
     {
         _logger = logger;
         _mapper = mapper;
-        _surveysService = surveysService;
+        _mediator = mediator;
     }
 
     
@@ -41,16 +43,20 @@ public sealed class SurveysConsumer : IConsumer<SurveyQueueModel>
         switch (surveyQueue.EventType)
         {
             case EventType.Create:
-                await _surveysService.AddSurveyAsync(survey);
+                var createCommand = new AddSurveyCommand(survey);
+                await _mediator.Send(createCommand);
                 break;
             case EventType.Update:
-                await _surveysService.UpdateSurveyAsync(survey);
+                var updateCommand = new AddSurveyCommand(survey);
+                await _mediator.Send(updateCommand);
                 break;
             case EventType.Delete:
-                await _surveysService.DeleteSurveyAsync(survey);
+                var deleteCommand = new AddSurveyCommand(survey);
+                await _mediator.Send(deleteCommand);
                 break;
             default:
-                throw new ArgumentOutOfRangeException(nameof(surveyQueue), surveyQueue.EventType, "No such event");
+                throw new 
+                    ArgumentOutOfRangeException(nameof(surveyQueue), surveyQueue.EventType, "No such event");
         }
     }
 }

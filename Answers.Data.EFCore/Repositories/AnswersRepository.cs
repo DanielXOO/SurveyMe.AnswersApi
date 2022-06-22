@@ -34,6 +34,7 @@ public sealed class AnswersRepository : Repository<SurveyAnswer>, IAnswersReposi
     private IQueryable<SurveyAnswer> GetAnswersQuery()
     {
         return Data
-            .Include(answer => answer.QuestionsAnswers);
+            .Include(answer => answer.QuestionsAnswers)
+            .ThenInclude(questionAnswer => (questionAnswer as CheckboxQuestionAnswer).Options );
     }
 }
