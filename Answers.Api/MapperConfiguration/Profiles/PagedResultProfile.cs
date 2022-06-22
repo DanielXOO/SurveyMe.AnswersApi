@@ -1,6 +1,6 @@
 ﻿using Answers.Api.Models.Response.Pages;
 using Answers.Api.Models.Response.Results;
-using Answers.Services.Models.Surveys;
+using Answers.Domain.Answers.Models.Surveys;
 using AutoMapper;
 using SurveyMe.Common.Pagination;
 

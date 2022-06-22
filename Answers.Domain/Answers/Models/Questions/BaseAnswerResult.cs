@@ -1,6 +1,6 @@
 using Answers.Models.Questions;
 
-namespace Answers.Services.Models.Questions;
+namespace Answers.Domain.Answers.Models.Questions;
 
 public class BaseAnswerResult
 {

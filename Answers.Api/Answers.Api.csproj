@@ -10,6 +10,8 @@
         <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
         <PackageReference Include="IdentityServer4" Version="4.1.2" />
         <PackageReference Include="IdentityServer4.AccessTokenValidation" Version="3.0.1" />
+        <PackageReference Include="MediatR" Version="10.0.1" />
+        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.5" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.5">
           <PrivateAssets>all</PrivateAssets>
@@ -25,6 +27,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Answers.Data.EFCore\Answers.Data.EFCore.csproj" />
+      <ProjectReference Include="..\Answers.Domain\Answers.Domain.csproj" />
       <ProjectReference Include="..\Answers.Models\Answers.Models.csproj" />
       <ProjectReference Include="..\Answers.Services\Answers.Services.csproj" />
     </ItemGroup>

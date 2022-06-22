@@ -1,14 +1,16 @@
 using System.Text.Json.Serialization;
+using Answers.Api.Consumers;
 using Answers.Api.Converters;
 using Answers.Api.Extensions;
 using Answers.Data;
 using Answers.Data.Abstracts;
+using Answers.Domain.Answers.Commands;
 using Answers.Services;
 using Answers.Services.Abstracts;
 using Answers.Services.AutoMapper.Profiles;
-using Answers.Services.Consumers;
 using IdentityServer4.AccessTokenValidation;
 using MassTransit;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SurveyMe.Common.Logging;
 
@@ -41,8 +43,8 @@ builder.Services.AddAutoMapper(configuration =>
     configuration.AddMaps(typeof(Program).Assembly);
 });
 
-builder.Services.AddScoped<IAnswersService, AnswersService>();
-builder.Services.AddScoped<ISurveysService, SurveysService>();
+builder.Services.AddMediatR(typeof(AddAnswerCommand).Assembly);
+
 builder.Services.AddScoped<IAnswersUnitOfWork, AnswersUnitOfWork>();
 
 builder.Services.AddControllers();

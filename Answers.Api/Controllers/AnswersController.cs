@@ -2,10 +2,13 @@ using Answers.Api.Models.Request;
 using Answers.Api.Models.Request.Surveys;
 using Answers.Api.Models.Response.Pages;
 using Answers.Api.Models.Response.Results;
+using Answers.Domain.Answers.Commands;
+using Answers.Domain.Answers.Queries;
 using Answers.Models.Answers;
 using Answers.Services.Abstracts;
 using AutoMapper;
 using IdentityServer4.Extensions;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SurveyMe.Common.Exceptions;
@@ -20,15 +23,17 @@ namespace Answers.Api.Controllers;
 public sealed class AnswersController : Controller
 {
     private readonly IMapper _mapper;
-    private readonly IAnswersService _answersService;
+
+    private readonly IMediator _mediator;
     
-    public AnswersController(IMapper mapper, IAnswersService answersService)
+    
+    public AnswersController(IMapper mapper, IMediator mediator)
     {
         _mapper = mapper;
-        _answersService = answersService;
+        _mediator = mediator;
     }
     
-    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BaseErrorResponse))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseErrorResponse))]
     [HttpPost]
@@ -53,10 +58,11 @@ public sealed class AnswersController : Controller
         var authorId = Guid.Parse(HttpContext.User.GetSubjectId());
 
         var answer = _mapper.Map<SurveyAnswer>(surveyAnswerRequestModel);
+
+        var command = new AddAnswerCommand(answer);
+        await _mediator.Send(command);
         
-        await _answersService.AddAnswerAsync(answer, authorId);
-        
-        return Ok();
+        return NoContent();
     }
     
     [ProducesResponseType(StatusCodes.Status200OK)]
@@ -69,8 +75,10 @@ public sealed class AnswersController : Controller
         {
             throw new BadRequestException("Request is empty");
         }
+
+        var query = new GetSurveyAnswersQuery(request.Page, request.PageSize, surveyId);
         
-        var answers = await _answersService.GetSurveyAnswersAsync(request.Page, request.PageSize, surveyId);
+        var answers = await _mediator.Send(query);
         var response = _mapper.Map<PagedResultResponseModel<SurveyAnswerResultResponseModel>>(answers);
 
         return Ok(response);

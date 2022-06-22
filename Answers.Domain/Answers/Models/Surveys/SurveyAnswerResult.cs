@@ -1,6 +1,6 @@
-using Answers.Services.Models.Questions;
+using Answers.Domain.Answers.Models.Questions;
 
-namespace Answers.Services.Models.Surveys;
+namespace Answers.Domain.Answers.Models.Surveys;
 
 public class SurveyAnswerResult
 {

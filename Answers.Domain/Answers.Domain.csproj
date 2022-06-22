@@ -1,0 +1,29 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <Folder Include="Answers" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\Answers.Data.EFCore\Answers.Data.EFCore.csproj" />
+      <ProjectReference Include="..\Answers.Models\Answers.Models.csproj" />
+      <ProjectReference Include="..\Answers.Services\Answers.Services.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Reference Include="MediatR.Contracts">
+        <HintPath>..\..\..\..\.nuget\packages\mediatr.contracts\1.0.1\lib\netstandard2.0\MediatR.Contracts.dll</HintPath>
+      </Reference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="MediatR" Version="10.0.1" />
+    </ItemGroup>
+
+</Project>

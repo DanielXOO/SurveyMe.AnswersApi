@@ -1,48 +1,31 @@
 using Answers.Data.Abstracts;
+using Answers.Domain.Answers.Models.Questions;
+using Answers.Domain.Answers.Models.Surveys;
+using Answers.Domain.Answers.Queries;
 using Answers.Models.Answers;
-using Answers.Services.Abstracts;
-using Answers.Services.Models.Questions;
-using Answers.Services.Models.Surveys;
-using SurveyMe.Common.Exceptions;
+using MediatR;
 using SurveyMe.Common.Pagination;
 
-namespace Answers.Services;
+namespace Answers.Domain.Answers.QueriesHandlers;
 
-public class AnswersService : IAnswersService
+public class GetSurveyAnswersQueryHandler : IRequestHandler<GetSurveyAnswersQuery, PagedResult<SurveyAnswerResult>>
 {
     private readonly IAnswersUnitOfWork _unitOfWork;
-
-    public AnswersService(IAnswersUnitOfWork unitOfWork)
+    
+    
+    public GetSurveyAnswersQueryHandler(IAnswersUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
-
-
-    public async Task<SurveyAnswer> GetAnswerByIdAsync(Guid id)
+    
+    
+    public async Task<PagedResult<SurveyAnswerResult>> Handle(GetSurveyAnswersQuery request, 
+        CancellationToken cancellationToken)
     {
-        var answer = await _unitOfWork.Answers.GetByIdAsync(id);
-
-        return answer;
-    }
-
-    public async Task AddAnswerAsync(SurveyAnswer answer, Guid authorId)
-    {
-        answer.UserId = authorId;
-
-        var survey = await _unitOfWork.Surveys.GetByIdAsync(answer.SurveyId);
-
-        
-        
-        await _unitOfWork.Answers.CreateAsync(answer);
-    }
-
-    public async Task<PagedResult<SurveyAnswerResult>> GetSurveyAnswersAsync(int currentPage,
-        int pageSize, Guid surveyId)
-    {   
         var answers = await _unitOfWork.Answers
-            .GetSurveyAnswersAsync(currentPage, pageSize, surveyId);
+            .GetSurveyAnswersAsync(request.CurrentPage, request.PageSize, request.SurveyId);
 
-        var survey = await _unitOfWork.Surveys.GetByIdAsync(surveyId);
+        var survey = await _unitOfWork.Surveys.GetByIdAsync(request.SurveyId);
 
         var result = new List<SurveyAnswerResult>();
         
@@ -112,7 +95,8 @@ public class AnswersService : IAnswersService
             result.Add(surveyAnswer);
         }
 
-        var resultPage = new PagedResult<SurveyAnswerResult>(result, pageSize, currentPage, result.Count);
+        var resultPage = new PagedResult<SurveyAnswerResult>(result, request.PageSize,
+            request.CurrentPage, result.Count);
         
         return resultPage;
     }
