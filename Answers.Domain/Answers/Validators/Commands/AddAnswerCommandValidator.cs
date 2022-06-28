@@ -9,6 +9,6 @@ public class AddAnswerCommandValidator : AbstractValidator<AddAnswerCommand>
     {
         RuleFor(x => x.Answer).NotNull();
         RuleFor(x => x.Answer.SurveyId).NotEmpty();
-        RuleFor(x => x.Answer.UserPersonalityId).NotEmpty();
+        RuleFor(x => x.Answer.PersonalityId).NotEmpty();
     }
 }

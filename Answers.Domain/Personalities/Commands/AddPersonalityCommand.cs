@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Answers.Domain.Personalities.Commands;
 
-public class AddPersonalityCommand : IRequest
+public class AddPersonalityCommand : IRequest<Guid>
 {
     public Personality Personality { get; }
 

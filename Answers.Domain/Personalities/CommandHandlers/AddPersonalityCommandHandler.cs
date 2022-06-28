@@ -8,7 +8,7 @@ using SurveyMe.PersonsApi.Models.Request.Personality;
 
 namespace Answers.Domain.Personalities.CommandHandlers;
 
-public class AddPersonalityCommandHandler : IRequestHandler<AddPersonalityCommand>
+public class AddPersonalityCommandHandler : IRequestHandler<AddPersonalityCommand, Guid>
 {
     private readonly IAnswersUnitOfWork _unitOfWork;
 
@@ -29,7 +29,7 @@ public class AddPersonalityCommandHandler : IRequestHandler<AddPersonalityComman
     }
     
     
-    public async Task<Unit> Handle(AddPersonalityCommand request, CancellationToken cancellationToken)
+    public async Task<Guid> Handle(AddPersonalityCommand request, CancellationToken cancellationToken)
     {
         var survey = await _unitOfWork.Surveys.GetByIdAsync(request.SurveyId);
         var options = await _surveyPersonApi.GetSurveyPersonOptionsAsync(survey.SurveyOptionId);
@@ -60,8 +60,8 @@ public class AddPersonalityCommandHandler : IRequestHandler<AddPersonalityComman
 
         var personalityRequest = _mapper.Map<PersonalityCreateRequestModels>(personality);
 
-        await _personsApi.AddPersonalityAsync(personalityRequest);
+        var personalityId = await _personsApi.AddPersonalityAsync(personalityRequest);
         
-        return Unit.Value;
+        return personalityId;
     }
 }

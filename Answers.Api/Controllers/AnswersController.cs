@@ -60,13 +60,11 @@ public sealed class AnswersController : Controller
 
         var personalityAddCommand = new AddPersonalityCommand(personality, surveyId);
 
-        await _mediator.Send(personalityAddCommand);
-        
-        var authorId = Guid.Parse(HttpContext.User.GetSubjectId());
+        var personalityId = await _mediator.Send(personalityAddCommand);
 
         var answer = _mapper.Map<SurveyAnswer>(surveyAnswerRequestModel);
 
-        answer.UserPersonalityId = authorId;
+        answer.PersonalityId = personalityId;
         
         var command = new AddAnswerCommand(answer);
         await _mediator.Send(command);

@@ -10,5 +10,5 @@ public interface IPersonsApi
     Task<PersonalityResponseModel> GetPersonalityAsync(string id);
 
     [Post("/api/persons")]
-    Task AddPersonalityAsync(PersonalityCreateRequestModels personalityRequest);
+    Task<Guid> AddPersonalityAsync(PersonalityCreateRequestModels personalityRequest);
 }

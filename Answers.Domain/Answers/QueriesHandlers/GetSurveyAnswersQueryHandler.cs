@@ -34,7 +34,6 @@ public class GetSurveyAnswersQueryHandler : IRequestHandler<GetSurveyAnswersPage
             var surveyAnswer = new SurveyAnswerResult
             {
                 Name = survey.Name,
-                UserPersonalityId = answer.UserPersonalityId,
                 QuestionAnswers = answer.QuestionsAnswers.Join(survey.Questions,
                     questionAnswer => questionAnswer.QuestionId,
                     question => question.Id,
