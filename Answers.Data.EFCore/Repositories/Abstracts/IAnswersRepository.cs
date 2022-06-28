@@ -9,4 +9,6 @@ public interface IAnswersRepository : IRepository<SurveyAnswer>
     Task<SurveyAnswer> GetByIdAsync(Guid id);
 
     Task<PagedResult<SurveyAnswer>> GetSurveyAnswersAsync(int currentPage, int pageSize, Guid surveyId);
+
+    Task<IReadOnlyCollection<SurveyAnswer>> GetAllAnswersBySurveyId(Guid surveyId);
 }

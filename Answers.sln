@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Answers.Models", "Answers.M
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Answers.Domain", "Answers.Domain\Answers.Domain.csproj", "{83E06554-A877-4DAB-BBD4-7D1EEB17F7C7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Answers.Data.Refit", "Answers.Data.Refit\Answers.Data.Refit.csproj", "{812B6706-511B-4462-B8A1-593589339204}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{83E06554-A877-4DAB-BBD4-7D1EEB17F7C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83E06554-A877-4DAB-BBD4-7D1EEB17F7C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83E06554-A877-4DAB-BBD4-7D1EEB17F7C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{812B6706-511B-4462-B8A1-593589339204}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{812B6706-511B-4462-B8A1-593589339204}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{812B6706-511B-4462-B8A1-593589339204}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{812B6706-511B-4462-B8A1-593589339204}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -56,7 +56,7 @@ public class AnswersDbContext : DbContext
         {
             b.Property(e => e.Name)
                 .IsRequired();
-            
+
             b.HasMany(e => e.Questions)
                 .WithOne(e => e.Survey)
                 .HasForeignKey(e => e.SurveyId);

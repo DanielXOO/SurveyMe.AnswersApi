@@ -12,4 +12,6 @@ public class Survey
     public ICollection<Question> Questions { get; set; }
 
     public ICollection<SurveyAnswer> Answers { get; set; }
+
+    public Guid SurveyOptionId { get; set; }
 }

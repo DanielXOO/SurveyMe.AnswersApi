@@ -31,6 +31,15 @@ public sealed class AnswersRepository : Repository<SurveyAnswer>, IAnswersReposi
         return result;
     }
 
+    public async Task<IReadOnlyCollection<SurveyAnswer>> GetAllAnswersBySurveyId(Guid surveyId)
+    {
+        var answers = await GetAnswersQuery()
+            .Where(answer => answer.SurveyId == surveyId)
+            .ToListAsync();
+
+        return answers;
+    }
+
     private IQueryable<SurveyAnswer> GetAnswersQuery()
     {
         return Data

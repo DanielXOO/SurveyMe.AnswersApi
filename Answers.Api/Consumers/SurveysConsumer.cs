@@ -1,6 +1,5 @@
 using Answers.Domain.Surveys.Commands;
 using Answers.Models.Surveys;
-using Answers.Services.Abstracts;
 using AutoMapper;
 using MassTransit;
 using MediatR;

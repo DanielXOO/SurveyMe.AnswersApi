@@ -4,6 +4,7 @@ using Answers.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Answers.Data.Migrations
 {
     [DbContext(typeof(AnswersDbContext))]
-    partial class AnswersDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220627073000_Add-OptionsId")]
+    partial class AddOptionsId
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -69,9 +71,6 @@ namespace Answers.Data.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid>("PersonalityId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid>("SurveyId")
@@ -143,6 +142,34 @@ namespace Answers.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Survey");
+                });
+
+            modelBuilder.Entity("Answers.Models.SurveysOptions.SurveyPersonOptions", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<bool>("RequireAges")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RequireFirstName")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RequireGender")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("RequireSecondName")
+                        .HasColumnType("bit");
+
+                    b.Property<Guid>("SurveyId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SurveyId");
+
+                    b.ToTable("SurveyPersonOptions");
                 });
 
             modelBuilder.Entity("Answers.Models.Answers.CheckboxQuestionAnswer", b =>
@@ -251,6 +278,17 @@ namespace Answers.Data.Migrations
                 {
                     b.HasOne("Answers.Models.Surveys.Survey", "Survey")
                         .WithMany("Questions")
+                        .HasForeignKey("SurveyId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Survey");
+                });
+
+            modelBuilder.Entity("Answers.Models.SurveysOptions.SurveyPersonOptions", b =>
+                {
+                    b.HasOne("Answers.Models.Surveys.Survey", "Survey")
+                        .WithMany()
                         .HasForeignKey("SurveyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();

@@ -8,6 +8,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\Answers.Data.EFCore\Answers.Data.EFCore.csproj" />
+      <ProjectReference Include="..\Answers.Data.Refit\Answers.Data.Refit.csproj" />
       <ProjectReference Include="..\Answers.Models\Answers.Models.csproj" />
       <ProjectReference Include="..\Answers.Services\Answers.Services.csproj" />
     </ItemGroup>

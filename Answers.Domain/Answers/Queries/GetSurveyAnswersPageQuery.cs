@@ -4,7 +4,7 @@ using SurveyMe.Common.Pagination;
 
 namespace Answers.Domain.Answers.Queries;
 
-public class GetSurveyAnswersQuery : IRequest<PagedResult<SurveyAnswerResult>>
+public class GetSurveyAnswersPageQuery : IRequest<PagedResult<SurveyAnswerResult>>
 {
     public int CurrentPage { get; }
     
@@ -13,7 +13,7 @@ public class GetSurveyAnswersQuery : IRequest<PagedResult<SurveyAnswerResult>>
     public Guid SurveyId { get; }
 
 
-    public GetSurveyAnswersQuery(int currentPage, int pageSize, Guid surveyId)
+    public GetSurveyAnswersPageQuery(int currentPage, int pageSize, Guid surveyId)
     {
         CurrentPage = currentPage;
         PageSize = pageSize;

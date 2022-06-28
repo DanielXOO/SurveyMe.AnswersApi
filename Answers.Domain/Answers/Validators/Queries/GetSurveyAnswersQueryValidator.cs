@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Answers.Domain.Answers.Validators.Queries;
 
-public class GetSurveyAnswersQueryValidator  : AbstractValidator<GetSurveyAnswersQuery>
+public class GetSurveyAnswersQueryValidator  : AbstractValidator<GetSurveyAnswersPageQuery>
 {
     public GetSurveyAnswersQueryValidator()
     {

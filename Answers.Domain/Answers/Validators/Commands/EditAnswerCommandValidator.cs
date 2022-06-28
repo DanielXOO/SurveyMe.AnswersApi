@@ -10,6 +10,6 @@ public class EditAnswerCommandValidator : AbstractValidator<EditAnswerCommand>
         RuleFor(x => x.Answer).NotNull();
         RuleFor(x => x.Answer.Id).NotEmpty();
         RuleFor(x => x.Answer.SurveyId).NotEmpty();
-        RuleFor(x => x.Answer.UserId).NotEmpty();
+        RuleFor(x => x.Answer.UserPersonalityId).NotEmpty();
     }
 }

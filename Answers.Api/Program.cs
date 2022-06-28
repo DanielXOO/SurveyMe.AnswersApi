@@ -2,19 +2,21 @@ using System.Text.Json.Serialization;
 using Answers.Api.Consumers;
 using Answers.Api.Converters;
 using Answers.Api.Extensions;
+using Answers.Api.Handlers;
 using Answers.Data;
 using Answers.Data.Abstracts;
+using Answers.Data.Refit;
 using Answers.Domain.Answers.AutoMapper.Profiles;
 using Answers.Domain.Answers.Commands;
 using Answers.Domain.Answers.Validators.Commands;
+using Answers.Domain.Personalities.AutoMapper.Profiles;
 using Answers.Domain.Validation;
-using Answers.Services;
-using Answers.Services.Abstracts;
 using FluentValidation;
 using IdentityServer4.AccessTokenValidation;
 using MassTransit;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Refit;
 using SurveyMe.Common.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -70,9 +72,30 @@ builder.Services.AddMassTransit(x =>
     });
 });
 
+builder.Services.AddRefitClient<ISurveyPersonApi>()
+    .ConfigureHttpClient(c =>
+    {
+        var stringUrl = builder.Configuration.GetConnectionString("SurveyPersonApi");
+        c.BaseAddress = new Uri(stringUrl);
+    })
+    .AddHttpMessageHandler<AuthorizeHandler>();
+
+builder.Services.AddRefitClient<IPersonsApi>()
+    .ConfigureHttpClient(c =>
+    {
+        var stringUrl = builder.Configuration.GetConnectionString("PersonsApi");
+        c.BaseAddress = new Uri(stringUrl);
+    })
+    .AddHttpMessageHandler<AuthorizeHandler>();
+
+builder.Services.AddHttpContextAccessor();
+
+builder.Services.AddTransient<AuthorizeHandler>();
+
 builder.Services.AddAutoMapper(configuration =>
 {
     configuration.AddProfile(new QueueModelsProfile());
+    configuration.AddProfile(new PersonalityProfile());
 });
 
 builder.Services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)

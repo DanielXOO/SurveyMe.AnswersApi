@@ -8,7 +8,7 @@ using SurveyMe.Common.Pagination;
 
 namespace Answers.Domain.Answers.QueriesHandlers;
 
-public class GetSurveyAnswersQueryHandler : IRequestHandler<GetSurveyAnswersQuery, PagedResult<SurveyAnswerResult>>
+public class GetSurveyAnswersQueryHandler : IRequestHandler<GetSurveyAnswersPageQuery, PagedResult<SurveyAnswerResult>>
 {
     private readonly IAnswersUnitOfWork _unitOfWork;
     
@@ -19,7 +19,7 @@ public class GetSurveyAnswersQueryHandler : IRequestHandler<GetSurveyAnswersQuer
     }
     
     
-    public async Task<PagedResult<SurveyAnswerResult>> Handle(GetSurveyAnswersQuery request, 
+    public async Task<PagedResult<SurveyAnswerResult>> Handle(GetSurveyAnswersPageQuery request, 
         CancellationToken cancellationToken)
     {
         var answers = await _unitOfWork.Answers
@@ -34,7 +34,7 @@ public class GetSurveyAnswersQueryHandler : IRequestHandler<GetSurveyAnswersQuer
             var surveyAnswer = new SurveyAnswerResult
             {
                 Name = survey.Name,
-                UserId = answer.UserId,
+                UserPersonalityId = answer.UserPersonalityId,
                 QuestionAnswers = answer.QuestionsAnswers.Join(survey.Questions,
                     questionAnswer => questionAnswer.QuestionId,
                     question => question.Id,
@@ -80,7 +80,6 @@ public class GetSurveyAnswersQueryHandler : IRequestHandler<GetSurveyAnswersQuer
                             },
                             FileQuestionAnswer fileAnswer => new FileAnswerResult
                             {
-                                //TODO: Add fields to file answer
                                 QuestionType = questionAnswer.QuestionType
                             },
                             _ => throw new ArgumentOutOfRangeException(nameof(questionAnswer),
