@@ -22,6 +22,7 @@
     <ItemGroup>
       <PackageReference Include="FluentValidation" Version="11.1.0" />
       <PackageReference Include="MediatR" Version="10.0.1" />
+      <PackageReference Include="SurveyMe.AnswersApi.Models" Version="1.0.1" />
     </ItemGroup>
 
 </Project>

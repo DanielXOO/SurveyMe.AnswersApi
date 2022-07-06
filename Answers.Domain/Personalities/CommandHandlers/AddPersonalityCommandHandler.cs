@@ -1,6 +1,7 @@
 using Answers.Data.Abstracts;
 using Answers.Data.Refit;
 using Answers.Domain.Personalities.Commands;
+using Answers.Models.SurveysOptions;
 using AutoMapper;
 using MediatR;
 using SurveyMe.Common.Exceptions;
@@ -12,18 +13,18 @@ public class AddPersonalityCommandHandler : IRequestHandler<AddPersonalityComman
 {
     private readonly IAnswersUnitOfWork _unitOfWork;
 
-    private readonly ISurveyPersonApi _surveyPersonApi;
+    private readonly ISurveyPersonOptionsApi _surveyPersonOptionsApi;
 
     private readonly IPersonsApi _personsApi;
 
     private readonly IMapper _mapper;
     
     
-    public AddPersonalityCommandHandler(IAnswersUnitOfWork unitOfWork, ISurveyPersonApi surveyPersonApi,
+    public AddPersonalityCommandHandler(IAnswersUnitOfWork unitOfWork, ISurveyPersonOptionsApi surveyPersonOptionsApi,
         IPersonsApi personsApi, IMapper mapper)
     {
         _unitOfWork = unitOfWork;
-        _surveyPersonApi = surveyPersonApi;
+        _surveyPersonOptionsApi = surveyPersonOptionsApi;
         _personsApi = personsApi;
         _mapper = mapper;
     }
@@ -32,7 +33,10 @@ public class AddPersonalityCommandHandler : IRequestHandler<AddPersonalityComman
     public async Task<Guid> Handle(AddPersonalityCommand request, CancellationToken cancellationToken)
     {
         var survey = await _unitOfWork.Surveys.GetByIdAsync(request.SurveyId);
-        var options = await _surveyPersonApi.GetSurveyPersonOptionsAsync(survey.SurveyOptionId);
+        var optionsResponse = await _surveyPersonOptionsApi.GetSurveyOptionsAsync(survey.Id);
+
+        var options = _mapper.Map<SurveyPersonOptions>(optionsResponse);
+        
         var personality = request.Personality;
 
         var errors = new Dictionary<string, string[]>();

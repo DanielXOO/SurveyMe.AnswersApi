@@ -23,7 +23,6 @@ public class AnswerResultJsonConverter : JsonConverter<BaseAnswerResultResponseM
                 writer.WriteString("textAnswer", textAnswer.TextAnswer);
                 break;
             case FileAnswerResultResponseModel fileAnswer:
-                //TODO: Add files support
                 throw new NotImplementedException();
                 break;
             case CheckboxAnswerResultResponseModel checkboxAnswer:

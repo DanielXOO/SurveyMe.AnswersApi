@@ -18,6 +18,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Refit;
 using SurveyMe.Common.Logging;
+using SurveyMe.QueueModels;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -68,14 +69,18 @@ builder.Services.AddMassTransit(x =>
             cfg.Password("guest");
         });
         
-        config.ConfigureEndpoints(context);
+        config.ReceiveEndpoint("survey-answers-queue", e =>
+        {
+            e.Bind<SurveyQueueModel>();
+            e.ConfigureConsumer<SurveysConsumer>(context);
+        });
     });
 });
 
-builder.Services.AddRefitClient<ISurveyPersonApi>()
+builder.Services.AddRefitClient<ISurveyPersonOptionsApi>()
     .ConfigureHttpClient(c =>
     {
-        var stringUrl = builder.Configuration.GetConnectionString("SurveyPersonApi");
+        var stringUrl = builder.Configuration.GetConnectionString("SurveyPersonOptionsApi");
         c.BaseAddress = new Uri(stringUrl);
     })
     .AddHttpMessageHandler<AuthorizeHandler>();
