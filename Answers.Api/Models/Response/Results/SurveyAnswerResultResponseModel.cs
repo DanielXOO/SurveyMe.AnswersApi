@@ -6,5 +6,7 @@ public sealed class SurveyAnswerResultResponseModel
 
     public Guid UserId { get; set; }
     
+    public Guid PersonalityId { get; set; }
+    
     public ICollection<BaseAnswerResultResponseModel> QuestionAnswers { get; set; }
 }

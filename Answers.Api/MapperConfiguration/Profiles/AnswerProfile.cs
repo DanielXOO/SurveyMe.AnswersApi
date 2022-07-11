@@ -1,5 +1,6 @@
 ﻿using Answers.Api.Models.Request.Answers;
 using Answers.Api.Models.Request.Surveys;
+using Answers.Api.Models.Response.Answers;
 using Answers.Api.Models.Response.Results;
 using Answers.Domain.Answers.Models.Questions;
 using Answers.Domain.Answers.Models.Surveys;
@@ -13,7 +14,21 @@ public class AnswerProfile : Profile
     public AnswerProfile()
     {
         CreateMap<SurveyAnswerResult, SurveyAnswerResultResponseModel>();
+        CreateMap<SurveyAnswer, SurveyAnswerResponseModel>();
 
+        CreateMap<BaseQuestionAnswer, BaseAnswerResponseModel>()
+            .Include<TextQuestionAnswer, TextAnswerResponseModel>()
+            .Include<RateQuestionAnswer, RateAnswerResponseModel>()
+            .Include<ScaleQuestionAnswer, ScaleAnswerResponseModel>()
+            .Include<RadioQuestionAnswer, RadioAnswerResponseModel>()
+            .Include<CheckboxQuestionAnswer, CheckboxAnswerResponseModel>();
+
+        CreateMap<TextQuestionAnswer, TextAnswerResponseModel>();
+        CreateMap<RateQuestionAnswer, RateAnswerResponseModel>();
+        CreateMap<ScaleQuestionAnswer, ScaleAnswerResponseModel>();
+        CreateMap<RadioQuestionAnswer, RadioAnswerResponseModel>();
+        CreateMap<CheckboxQuestionAnswer, CheckboxAnswerResponseModel>();
+        
         CreateMap<BaseAnswerResult, BaseAnswerResultResponseModel>()
             .Include<TextAnswerResult, TextAnswerResultResponseModel>()
             .Include<RateAnswerResult, RateAnswerResultResponseModel>()

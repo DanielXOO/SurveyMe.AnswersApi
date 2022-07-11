@@ -1,5 +1,6 @@
 using Answers.Api.Models.Request;
 using Answers.Api.Models.Request.Surveys;
+using Answers.Api.Models.Response.Answers;
 using Answers.Api.Models.Response.Pages;
 using Answers.Api.Models.Response.Results;
 using Answers.Domain.Answers.Commands;
@@ -8,7 +9,6 @@ using Answers.Domain.Personalities.Commands;
 using Answers.Models.Answers;
 using Answers.Models.Personality;
 using AutoMapper;
-using IdentityServer4.Extensions;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -18,8 +18,11 @@ using SurveyMe.Error.Models.Response;
 namespace Answers.Api.Controllers;
 
 
+/// <summary>
+/// Controller for interaction with answers
+/// </summary>
 [ApiController]
-[Route("api/surveys/{surveyId:guid}/answers")]
+[Route("api/surveys/{surveyId:guid}/[controller]")]
 [Authorize]
 public sealed class AnswersController : Controller
 {
@@ -28,13 +31,28 @@ public sealed class AnswersController : Controller
     private readonly IMediator _mediator;
     
     
+    /// <summary>
+    /// Constructor of the controller
+    /// </summary>
+    /// <param name="mapper">Automapper instance</param>
+    /// <param name="mediator">Mediator instance</param>
     public AnswersController(IMapper mapper, IMediator mediator)
     {
         _mapper = mapper;
         _mediator = mediator;
     }
     
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    /// <summary>
+    /// Endpoint for adding answer
+    /// </summary>
+    /// <param name="surveyAnswerRequestModel">Model for creating request</param>
+    /// <param name="surveyId">Survey id</param>
+    /// <returns>Created survey</returns>
+    /// <exception cref="BadRequestException">
+    /// If survey id in answer model do not match with route
+    /// and model is invalid 
+    /// </exception>
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BaseErrorResponse))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseErrorResponse))]
     [HttpPost]
@@ -67,23 +85,38 @@ public sealed class AnswersController : Controller
         answer.PersonalityId = personalityId;
         
         var command = new AddAnswerCommand(answer);
-        await _mediator.Send(command);
+        answer = await _mediator.Send(command);
+        var answerResponse = _mapper.Map<SurveyAnswerResponseModel>(answer);
         
-        return NoContent();
+        return CreatedAtAction(Url.Action(nameof(GetAllAnswerBySurveyId)), answerResponse);
     }
 
+    /// <summary>
+    /// Endpoint for getting all answers by survey id
+    /// </summary>
+    /// <param name="surveyId"></param>
+    /// <returns>Array of survey answers</returns>
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BaseErrorResponse))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseErrorResponse))]
     [HttpGet]
     public async Task<IActionResult> GetAllAnswerBySurveyId(Guid surveyId)
     {
         var query = new GetAllAnswersBySurveyIdQuery(surveyId);
         var answers = await _mediator.Send(query);
+
+        var answersResponse = _mapper.Map<IReadOnlyCollection<SurveyAnswerResponseModel>>(answers);
         
-        return Ok(answers);
+        return Ok(answersResponse);
     }
 
+    /// <summary>
+    /// Endpoint for getting page with surveys 
+    /// </summary>
+    /// <param name="request">Model for request</param>
+    /// <param name="surveyId">Survey id</param>
+    /// <param name="page">Page number</param>
+    /// <returns>Paginated result</returns>
+    /// <exception cref="BadRequestException">If request is null</exception>
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(BaseErrorResponse))]
     [ProducesResponseType(StatusCodes.Status404NotFound, Type = typeof(BaseErrorResponse))]

@@ -3,7 +3,7 @@ using MediatR;
 
 namespace Answers.Domain.Answers.Commands;
 
-public class AddAnswerCommand : IRequest
+public class AddAnswerCommand : IRequest<SurveyAnswer>
 {
     public SurveyAnswer Answer { get; }
     

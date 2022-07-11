@@ -29,11 +29,20 @@ builder.Host.ConfigureLogging(logBuilder =>
 });
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+    var filePath = Path.Combine(AppContext.BaseDirectory, "Answers.Api.xml");
+    options.IncludeXmlComments(filePath);
+});
 
 builder.Services.AddDbContext<AnswersDbContext>(options
     => options.UseSqlServer(builder.Configuration
         .GetConnectionString("DefaultConnection")));
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = builder.Configuration.GetConnectionString("RedisHost");
+});
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
 builder.Services.AddControllers()

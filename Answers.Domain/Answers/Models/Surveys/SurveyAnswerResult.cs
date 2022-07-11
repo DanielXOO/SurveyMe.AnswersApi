@@ -6,7 +6,7 @@ public class SurveyAnswerResult
 {
     public string Name { get; set; }
 
-    public Guid UserPersonalityId { get; set; }
+    public Guid PersonalityId { get; set; }
     
     public ICollection<BaseAnswerResult> QuestionAnswers { get; set; }
 }

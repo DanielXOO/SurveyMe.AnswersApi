@@ -8,6 +8,6 @@ public class SurveyOptionsProfile : Profile
 {
     public SurveyOptionsProfile()
     {
-        CreateMap<PersonalityCreateRequestModels, Personality>();
+        CreateMap<PersonalityCreateRequestModel, Personality>();
     }
 }

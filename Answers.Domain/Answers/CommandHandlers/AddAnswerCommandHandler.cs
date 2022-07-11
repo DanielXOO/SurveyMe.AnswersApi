@@ -1,6 +1,7 @@
 using Answers.Data.Abstracts;
 using Answers.Data.Refit;
 using Answers.Domain.Answers.Commands;
+using Answers.Models.Answers;
 using AutoMapper;
 using MassTransit;
 using MediatR;
@@ -9,30 +10,23 @@ using SurveyMe.Common.Exceptions;
 
 namespace Answers.Domain.Answers.CommandHandlers;
 
-public class AddAnswerCommandHandler : IRequestHandler<AddAnswerCommand>
+public class AddAnswerCommandHandler : IRequestHandler<AddAnswerCommand, SurveyAnswer>
 {
     private readonly IAnswersUnitOfWork _unitOfWork;
-    
-    private readonly ISurveyPersonOptionsApi _surveyPersonOptionsApi;
-
-    private readonly IPersonsApi _personsApi;
 
     private readonly IBus _bus;
 
     private readonly IMapper _mapper;
     
     
-    public AddAnswerCommandHandler(IAnswersUnitOfWork unitOfWork, ISurveyPersonOptionsApi surveyPersonOptionsApi,
-        IMapper mapper, IPersonsApi personsApi, IBus bus)
+    public AddAnswerCommandHandler(IAnswersUnitOfWork unitOfWork, IMapper mapper, IBus bus)
     {
         _unitOfWork = unitOfWork;
-        _surveyPersonOptionsApi = surveyPersonOptionsApi;
         _mapper = mapper;
-        _personsApi = personsApi;
         _bus = bus;
     }
     
-    public async Task<Unit> Handle(AddAnswerCommand request, CancellationToken cancellationToken)
+    public async Task<SurveyAnswer> Handle(AddAnswerCommand request, CancellationToken cancellationToken)
     {
         var survey = await _unitOfWork.Surveys.GetByIdAsync(request.Answer.SurveyId);
 
@@ -47,6 +41,6 @@ public class AddAnswerCommandHandler : IRequestHandler<AddAnswerCommand>
 
         await _bus.Publish(answerQueue, cancellationToken);
         
-        return Unit.Value;
+        return request.Answer;
     }
 }

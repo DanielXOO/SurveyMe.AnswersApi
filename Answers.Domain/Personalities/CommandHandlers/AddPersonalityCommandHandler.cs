@@ -1,11 +1,14 @@
+using System.Text.Json;
 using Answers.Data.Abstracts;
 using Answers.Data.Refit;
 using Answers.Domain.Personalities.Commands;
 using Answers.Models.SurveysOptions;
 using AutoMapper;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using SurveyMe.Common.Exceptions;
 using SurveyMe.PersonsApi.Models.Request.Personality;
+using SurveyMe.SurveyPersonApi.Models.Response.Options.Survey;
 
 namespace Answers.Domain.Personalities.CommandHandlers;
 
@@ -18,22 +21,41 @@ public class AddPersonalityCommandHandler : IRequestHandler<AddPersonalityComman
     private readonly IPersonsApi _personsApi;
 
     private readonly IMapper _mapper;
+
+    private readonly IDistributedCache _cache;
     
     
     public AddPersonalityCommandHandler(IAnswersUnitOfWork unitOfWork, ISurveyPersonOptionsApi surveyPersonOptionsApi,
-        IPersonsApi personsApi, IMapper mapper)
+        IPersonsApi personsApi, IMapper mapper, IDistributedCache cache)
     {
         _unitOfWork = unitOfWork;
         _surveyPersonOptionsApi = surveyPersonOptionsApi;
         _personsApi = personsApi;
         _mapper = mapper;
+        _cache = cache;
     }
     
     
     public async Task<Guid> Handle(AddPersonalityCommand request, CancellationToken cancellationToken)
     {
         var survey = await _unitOfWork.Surveys.GetByIdAsync(request.SurveyId);
-        var optionsResponse = await _surveyPersonOptionsApi.GetSurveyOptionsAsync(survey.Id);
+
+        var serializedOptions = await _cache.GetStringAsync(survey.Id.ToString(), cancellationToken);
+
+        SurveyOptionsResponseModel optionsResponse;
+        
+        if (string.IsNullOrEmpty(serializedOptions))
+        {
+            optionsResponse = await _surveyPersonOptionsApi.GetSurveyOptionsAsync(survey.Id);
+
+            serializedOptions = JsonSerializer.Serialize(optionsResponse);
+            
+            await _cache.SetStringAsync(survey.Id.ToString(), serializedOptions, cancellationToken);
+        }
+        else
+        {
+            optionsResponse = JsonSerializer.Deserialize<SurveyOptionsResponseModel>(serializedOptions);
+        }
 
         var options = _mapper.Map<SurveyPersonOptions>(optionsResponse);
         
@@ -48,7 +70,9 @@ public class AddPersonalityCommandHandler : IRequestHandler<AddPersonalityComman
                 continue;
             }
 
-            var isValid = personality.GetType().GetProperty(personalityOption.PropertyName)?
+            var isValid = personality
+                .GetType()
+                .GetProperty(personalityOption.PropertyName)?
                 .GetValue(personality);
 
             if (isValid == null)
@@ -62,10 +86,10 @@ public class AddPersonalityCommandHandler : IRequestHandler<AddPersonalityComman
             throw new BadRequestException("Validation error", errors);
         }
 
-        var personalityRequest = _mapper.Map<PersonalityCreateRequestModels>(personality);
+        var personalityRequest = _mapper.Map<PersonalityCreateRequestModel>(personality);
 
-        var personalityId = await _personsApi.AddPersonalityAsync(personalityRequest);
+        var personalityResponse = await _personsApi.AddPersonalityAsync(personalityRequest);
         
-        return personalityId;
+        return personalityResponse.PersonalityId;
     }
 }
