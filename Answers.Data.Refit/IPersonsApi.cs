@@ -6,6 +6,6 @@ namespace Answers.Data.Refit;
 
 public interface IPersonsApi
 {
-    [Post("/api/persons")]
+    [Post("/persons-api/persons")]
     Task<PersonalityResponseModel> AddPersonalityAsync(PersonalityCreateRequestModel personalityRequest);
 }

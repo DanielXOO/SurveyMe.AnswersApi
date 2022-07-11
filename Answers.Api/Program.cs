@@ -89,7 +89,7 @@ builder.Services.AddMassTransit(x =>
 builder.Services.AddRefitClient<ISurveyPersonOptionsApi>()
     .ConfigureHttpClient(c =>
     {
-        var stringUrl = builder.Configuration.GetConnectionString("SurveyPersonOptionsApi");
+        var stringUrl = builder.Configuration.GetConnectionString("GatewayURL");
         c.BaseAddress = new Uri(stringUrl);
     })
     .AddHttpMessageHandler<AuthorizeHandler>();
@@ -97,7 +97,7 @@ builder.Services.AddRefitClient<ISurveyPersonOptionsApi>()
 builder.Services.AddRefitClient<IPersonsApi>()
     .ConfigureHttpClient(c =>
     {
-        var stringUrl = builder.Configuration.GetConnectionString("PersonsApi");
+        var stringUrl = builder.Configuration.GetConnectionString("GatewayURL");
         c.BaseAddress = new Uri(stringUrl);
     })
     .AddHttpMessageHandler<AuthorizeHandler>();
