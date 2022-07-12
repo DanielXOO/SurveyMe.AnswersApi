@@ -102,7 +102,12 @@ builder.Services.AddRefitClient<IPersonsApi>()
     })
     .AddHttpMessageHandler<AuthorizeHandler>();
 
-builder.Services.AddHttpContextAccessor();
+builder.Services.AddRefitClient<IAuthenticationApi>()
+    .ConfigureHttpClient(c =>
+    {
+        var stringUrl = builder.Configuration.GetConnectionString("GatewayURL");
+        c.BaseAddress = new Uri(stringUrl);
+    });
 
 builder.Services.AddTransient<AuthorizeHandler>();
 
@@ -117,9 +122,8 @@ builder.Services.AddAuthentication(IdentityServerAuthenticationDefaults.Authenti
     {
         options.Authority = "https://localhost:7179";
         options.RequireHttpsMetadata = false;
-        options.ApiName = "SurveyMeApi";
-        options.ApiSecret = "api_secret";
-        options.JwtValidationClockSkew = TimeSpan.FromSeconds(1);
+        options.ApiName = "Answers.Api";
+        options.ApiSecret = "answers_secret";
     });
 
 var app = builder.Build();

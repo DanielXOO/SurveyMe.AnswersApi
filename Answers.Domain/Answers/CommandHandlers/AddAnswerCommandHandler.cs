@@ -1,5 +1,4 @@
 using Answers.Data.Abstracts;
-using Answers.Data.Refit;
 using Answers.Domain.Answers.Commands;
 using Answers.Models.Answers;
 using AutoMapper;

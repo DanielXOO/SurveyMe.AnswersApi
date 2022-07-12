@@ -1,28 +1,37 @@
+using System.Net.Http.Headers;
+using Answers.Domain.Authentication.Queries;
+using MediatR;
+using SurveyMe.AuthenticationApi.Models.Request;
 using SurveyMe.Common.Exceptions;
 
 namespace Answers.Api.Handlers;
 
 public class AuthorizeHandler : DelegatingHandler
 {
-    private readonly IHttpContextAccessor _accessor;
+    private readonly IMediator _mediator;
     
     
-    public AuthorizeHandler(IHttpContextAccessor accessor)
+    public AuthorizeHandler(IMediator mediator)
     {
-        _accessor = accessor;
+        _mediator = mediator;
     }
 
-    protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+    protected override async Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
     {
-        string header = _accessor.HttpContext.Request.Headers.Authorization;
-
-        if (string.IsNullOrEmpty(header))
+        var requestToken = new GetTokenRequestModel
         {
-            throw new UnauthorizedException("Token not found");
-        }
+            client_id = "api",
+            client_secret = "api_secret",
+            grant_type = "client_credentials",
+            scope = "ApisScope"
+        };
+
+        var command = new GetTokenQuery(requestToken);
+
+        var token = await _mediator.Send(command, cancellationToken);
+
+        request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
         
-        request.Headers.Add("Authorization", header);
-        
-        return base.SendAsync(request, cancellationToken);
+        return await base.SendAsync(request, cancellationToken);
     }
 }
