@@ -10,7 +10,6 @@
       <ProjectReference Include="..\Answers.Data.EFCore\Answers.Data.EFCore.csproj" />
       <ProjectReference Include="..\Answers.Data.Refit\Answers.Data.Refit.csproj" />
       <ProjectReference Include="..\Answers.Models\Answers.Models.csproj" />
-      <ProjectReference Include="..\Answers.Services\Answers.Services.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -20,10 +19,13 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper" Version="11.0.1" />
       <PackageReference Include="FluentValidation" Version="11.1.0" />
+      <PackageReference Include="MassTransit" Version="8.0.5" />
       <PackageReference Include="MediatR" Version="10.0.1" />
       <PackageReference Include="SurveyMe.AnswersApi.Models" Version="1.0.1" />
       <PackageReference Include="SurveyMe.AuthenticationApi.Models" Version="1.0.2" />
+      <PackageReference Include="SurveyMe.QueueModels" Version="1.0.8" />
     </ItemGroup>
 
 </Project>
