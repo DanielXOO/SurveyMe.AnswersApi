@@ -120,7 +120,7 @@ builder.Services.AddAutoMapper(configuration =>
 builder.Services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
     .AddIdentityServerAuthentication(options =>
     {
-        options.Authority = "https://localhost:7179";
+        options.Authority = "https://authentication-api:5001";;
         options.RequireHttpsMetadata = false;
         options.ApiName = "Answers.Api";
         options.ApiSecret = "answers_secret";
