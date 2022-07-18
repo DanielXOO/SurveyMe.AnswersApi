@@ -35,9 +35,10 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(filePath);
 });
 
+var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
+
 builder.Services.AddDbContext<AnswersDbContext>(options
-    => options.UseSqlServer(builder.Configuration
-        .GetConnectionString("DefaultConnection")));
+    => options.UseSqlServer(connectionString));
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
