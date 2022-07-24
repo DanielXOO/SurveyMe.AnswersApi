@@ -35,7 +35,7 @@ builder.Services.AddSwaggerGen(options =>
     options.IncludeXmlComments(filePath);
 });
 
-var connectionString = Environment.GetEnvironmentVariable("ConnectionString");
+var connectionString = "Server=DESKTOP-KP79CHK;Database=AnswersDB;Trusted_Connection=True;MultipleActiveResultSets=true;";
 
 builder.Services.AddDbContext<AnswersDbContext>(options
     => options.UseSqlServer(connectionString));
@@ -73,7 +73,14 @@ builder.Services.AddMassTransit(x =>
     
     x.UsingRabbitMq((context, config) =>
     {
-        config.Host("rabbitmq", "/", cfg =>
+        config.ConfigureJsonSerializerOptions(options =>
+        {
+            options.Converters.Add(new AnswerQueueConverter());
+
+            return options;
+        });
+        
+        config.Host("localhost", "/", cfg =>
         {
             cfg.Username("guest");
             cfg.Password("guest");
@@ -121,7 +128,7 @@ builder.Services.AddAutoMapper(configuration =>
 builder.Services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
     .AddIdentityServerAuthentication(options =>
     {
-        options.Authority = "http://authentication-api";;
+        options.Authority = "https://localhost:7179";
         options.RequireHttpsMetadata = false;
         options.ApiName = "Answers.Api";
         options.ApiSecret = "answers_secret";

@@ -21,25 +21,27 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
     {
         if (!_validators.Any())
         {
-            return await next();
+            var response = await next();
+
+            return response;
         }
         
         var results = _validators.Select(v => v.Validate(request));
 
         var hasError = results.Any(e => !e.IsValid);
-        
-        if (hasError)
-        {
-            var errorMessages = results.SelectMany(r => r.Errors)
-                .GroupBy(r => r.PropertyName, r => r.ErrorMessage,
-                    (key, value) 
-                        => new KeyValuePair<string, IEnumerable<string>>(key, value))
-                .ToDictionary(e => e.Key, 
-                    e => e.Value.ToArray());
-            
-            throw new BadRequestException("Invalid model", errorMessages);
-        }
 
-        return await next();
+        if (!hasError)
+        {
+            return await next();
+        }
+        
+        var errorMessages = results.SelectMany(r => r.Errors)
+            .GroupBy(r => r.PropertyName, r => r.ErrorMessage,
+                (key, value) 
+                    => new KeyValuePair<string, IEnumerable<string>>(key, value))
+            .ToDictionary(e => e.Key, 
+                e => e.Value.ToArray());
+        
+        throw new BadRequestException("Invalid model", errorMessages);
     }
 }
