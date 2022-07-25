@@ -21,7 +21,9 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
     {
         if (!_validators.Any())
         {
-            return await next();
+            var response = await next();
+
+            return response;
         }
         
         var results = _validators.Select(v => v.Validate(request));
