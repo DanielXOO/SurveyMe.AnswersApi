@@ -42,7 +42,7 @@ builder.Services.AddDbContext<AnswersDbContext>(options
 
 builder.Services.AddStackExchangeRedisCache(options =>
 {
-    options.Configuration = builder.Configuration.GetConnectionString("RedisHost");
+    options.Configuration = "answers-api-cache";
 });
 
 builder.Services.AddRouting(options => options.LowercaseUrls = true);
@@ -73,6 +73,13 @@ builder.Services.AddMassTransit(x =>
     
     x.UsingRabbitMq((context, config) =>
     {
+        config.ConfigureJsonSerializerOptions(options =>
+        {
+            options.Converters.Add(new AnswerQueueConverter());
+
+            return options;
+        });
+        
         config.Host("rabbitmq", "/", cfg =>
         {
             cfg.Username("guest");
@@ -121,7 +128,7 @@ builder.Services.AddAutoMapper(configuration =>
 builder.Services.AddAuthentication(IdentityServerAuthenticationDefaults.AuthenticationScheme)
     .AddIdentityServerAuthentication(options =>
     {
-        options.Authority = "http://authentication-api";;
+        options.Authority = "http://authentication-api";
         options.RequireHttpsMetadata = false;
         options.ApiName = "Answers.Api";
         options.ApiSecret = "answers_secret";
